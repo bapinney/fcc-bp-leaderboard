@@ -1,0 +1,59 @@
+/* line 8, /Applications/mampstack-5.6.6-0/apache2/htdocs/fcc-bp-leaderboard/styles.scss */
+body {
+  background: radial-gradient(ellipse at center, #d9e7f2 20%, #79aad2 100%); }
+
+/* line 12, /Applications/mampstack-5.6.6-0/apache2/htdocs/fcc-bp-leaderboard/styles.scss */
+html {
+  height: 100%;
+  /* Prevents the gradient from repeating if the content does not span the entire viewport */ }
+
+/* line 17, /Applications/mampstack-5.6.6-0/apache2/htdocs/fcc-bp-leaderboard/styles.scss */
+.maincontainer {
+  align-content: stretch;
+  display: flex;
+  justify-content: center;
+  margin-top: 40px; }
+
+/* line 24, /Applications/mampstack-5.6.6-0/apache2/htdocs/fcc-bp-leaderboard/styles.scss */
+.editor {
+  background-color: white;
+  border-radius: 5px;
+  display: inline-flex;
+  margin-right: 50px;
+  min-height: 500px;
+  min-width: 300px; }
+
+/* line 33, /Applications/mampstack-5.6.6-0/apache2/htdocs/fcc-bp-leaderboard/styles.scss */
+.editor textarea {
+  background-color: white;
+  border-radius: 5px;
+  height: 100%;
+  resize: none;
+  width: 100%; }
+
+/* line 41, /Applications/mampstack-5.6.6-0/apache2/htdocs/fcc-bp-leaderboard/styles.scss */
+.logo {
+  color: white;
+  font-family: Tahoma, Helvetica;
+  font-size: 34px;
+  font-weight: 800;
+  letter-spacing: .1em;
+  text-align: center;
+  text-shadow: 1px 1px 4px darkblue; }
+
+/* line 51, /Applications/mampstack-5.6.6-0/apache2/htdocs/fcc-bp-leaderboard/styles.scss */
+.preview {
+  background-color: #fafafa;
+  border-radius: 5px;
+  min-height: 100px;
+  min-width: 300px;
+  padding: 2px;
+  display: inline-flex; }
+
+/* line 60, /Applications/mampstack-5.6.6-0/apache2/htdocs/fcc-bp-leaderboard/styles.scss */
+.rankTable {
+  border: 2px solid white;
+  display: block;
+  min-width: 400px; }
+
+/*# sourceMappingURL=styles.css.map */
