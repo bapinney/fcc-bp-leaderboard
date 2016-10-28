@@ -28,31 +28,56 @@ class UserRow extends React.Component {
     render() {
         return (
             <tr>
-                <td>{this.props.user.firstName}</td>
-                <td>123</td>
-                <td>234</td>
-                <td>567</td>
+                <td>{this.props.user.username}</td>
+                <td>{this.props.alltime}</td>
+                <td>{this.props.recent}</td>
+                <td>{this.props.lastUpdate}</td>
             </tr>
         );
     }
 };
 
-var DataTable = React.createClass ({
+class DataTable extends React.Component {
     
-    handleInput: function(e) {
-        this.props.cbParent(e);
-    },
+       
+    componentWillMount() {
+        console.log("At component will mount!");
+        this.rowsRetrieved = false;
+        //If you don't use it in `render(), it shouldn't be on the state. 
+        this.fetchData()
+        .then(function(response) {
+            console.dir(response);
+            var rows = [];
+            var results = response;
+            console.dir(this);
+            for (var i=0; i < results.length; i++) {
+                rows.push(<UserRow key={i} user={results[i]}/>)
+            }
+            this.tableRows = rows;
+            this.rowsRetrieved = true;
+            console.dir(this.tableRows);
+            this.forceUpdate();
+        }.bind(this), //Bind allows us to access React's 'this' inside
+        function(error) {
+            console.log("at error");
+            return null;
+        });
+    }
     
-    render: function() {
-        var rows = [];
-        var results = [
-            {firstName: "John", lastName: "Smith"},
-            {firstName: "Russ", lastName: "Kerry"}
-        ];
-        
-        for (var i=0; i < results.length; i++) {
-            rows.push(<UserRow user={results[i]}/>)
-        }
+    fetchData() {
+        console.log("fetchData called!");
+        return new Promise(function(resolve, reject) {
+            fetch('https://fcctop100.herokuapp.com/api/fccusers/top/recent')
+            .then(function(response) {
+                resolve(response.json());
+            })
+            .catch(function(error) {
+                reject(error.message);
+            });
+        });
+    }
+    
+    render() {
         
         return (
             <table className="rankTable">
@@ -65,12 +90,12 @@ var DataTable = React.createClass ({
                     </tr>
                 </thead>
                 <tbody>
-                    {rows}
+                {this.tableRows}
                 </tbody>
             </table>
         );
     }
-});
+};
 
 
 ReactDOM.render(
