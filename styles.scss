@@ -13,6 +13,9 @@ html {
     height: 100%; /* Prevents the gradient from repeating if the content does not span the entire viewport */
 }
 
+body {
+    font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
+}
 
 .maincontainer {
     align-content: stretch;
@@ -61,4 +64,12 @@ html {
     border: 2px solid white;
     display: block;
     min-width: 400px;
+}
+
+.rankTable tbody tr:nth-child(odd) {
+    background-color: $bgColor;
+}
+
+.rankTable tbody tr:nth-child(even) {
+    background-color: darken($bgColor,10%);
 }

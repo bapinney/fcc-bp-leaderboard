@@ -17,7 +17,7 @@ var AppContainer = React.createClass({
                     Camper Leaderboard
                 </div>
                 <div className="maincontainer">
-                    <DataTable ref={(st) => this.DataTable = st} ></DataTable>
+                    <DataTable></DataTable>
                 </div>
             </div>
         )
@@ -29,9 +29,9 @@ class UserRow extends React.Component {
         return (
             <tr>
                 <td>{this.props.user.username}</td>
-                <td>{this.props.alltime}</td>
-                <td>{this.props.recent}</td>
-                <td>{this.props.lastUpdate}</td>
+                <td>{this.props.user.alltime.toLocaleString()}</td>
+                <td>{this.props.user.recent.toLocaleString()}</td>
+                <td>{this.props.user.lastUpdate}</td>
             </tr>
         );
     }
@@ -39,41 +39,78 @@ class UserRow extends React.Component {
 
 class DataTable extends React.Component {
     
-       
+    constructor(props) {
+        super(props);
+        this. fetchData = this. fetchData.bind(this);
+    }
+    
     componentWillMount() {
+        //Set to null so render does not generate an error.  When the data is returned and the state is updated, the view will be re-rendered;
+        this.setState({tableRows: null});
         console.log("At component will mount!");
         this.rowsRetrieved = false;
         //If you don't use it in `render(), it shouldn't be on the state. 
+        
         this.fetchData()
         .then(function(response) {
-            console.dir(response);
             var rows = [];
-            var results = response;
-            console.dir(this);
+            var results = response;;
             for (var i=0; i < results.length; i++) {
                 rows.push(<UserRow key={i} user={results[i]}/>)
             }
-            this.tableRows = rows;
-            this.rowsRetrieved = true;
-            console.dir(this.tableRows);
-            this.forceUpdate();
+            this.setState({tableRows: rows});
         }.bind(this), //Bind allows us to access React's 'this' inside
+        
         function(error) {
             console.log("at error");
-            return null;
+            return false;
         });
     }
     
-    fetchData() {
-        console.log("fetchData called!");
-        return new Promise(function(resolve, reject) {
-            fetch('https://fcctop100.herokuapp.com/api/fccusers/top/recent')
-            .then(function(response) {
-                resolve(response.json());
-            })
-            .catch(function(error) {
-                reject(error.message);
+    fetchData(sortBy = "recent") {
+        console.log("fetchData called addd!");
+        
+        if (sortBy == "recent") {
+            return new Promise(function(resolve, reject) {
+                fetch('https://fcctop100.herokuapp.com/api/fccusers/top/recent')
+                .then(function(response) {
+                    resolve(response.json());
+                })
+                .catch(function(error) {
+                    reject(error.message);
+                });
             });
+        }
+        else {
+            return new Promise(function(resolve, reject) {
+                fetch('https://fcctop100.herokuapp.com/api/fccusers/top/alltime')
+                .then(function(response) {
+                    resolve(response.json());
+                })
+                .catch(function(error) {
+                    reject(error.message);
+                });
+            });
+        }
+    }
+    
+    sortBy(e) {
+        var sortby = e.target.dataset.sortby;
+        console.log(`sortby is ${sortby}`);
+        this.fetchData(sortby)
+        .then(function(response) {
+            var rows = [];
+            var results = response;;
+            for (var i=0; i < results.length; i++) {
+                rows.push(<UserRow key={i} user={results[i]}/>)
+            }
+            this.setState({tableRows: rows, sortBy: sortby});
+            this.forceUpdate();
+        }.bind(this), //Bind allows us to access React's 'this' inside
+        
+        function(error) {
+            console.log("at error");
+            return false;
         });
     }
     
@@ -84,13 +121,14 @@ class DataTable extends React.Component {
                 <thead>
                     <tr>
                         <th>Username</th>
-                        <th>All-time</th>
-                        <th>Recent</th>
+                        <th data-sortBy="alltime" onClick={ (e) => this.sortBy(e)}>All-time {this.state.sortBy == "alltime" ? <span>&#9663;</span> : null}</th>
+                        <th data-sortBy="recent" onClick={ (e) => this.sortBy(e)}>Recent
+                        {this.state.sortBy == "recent" ? <span>&#9663;</span> : null}</th>
                         <th>Last Update</th>
                     </tr>
                 </thead>
                 <tbody>
-                {this.tableRows}
+                {this.state.tableRows}
                 </tbody>
             </table>
         );
